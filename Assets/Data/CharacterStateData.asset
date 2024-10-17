@@ -1,0 +1,122 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3f425319174caaa42ac1488c162c6908, type: 3}
+  m_Name: CharacterStateData
+  m_EditorClassIdentifier: 
+  idleStateData:
+    actionName: Idle
+    baseActionDuration: -1
+    resourceData:
+      baseStaminaCost: 0
+      baseMagicCost: 0
+      baseHealthCost: 0
+    onEnterAnimation: {fileID: 7400000, guid: f37b9efc9258f1e4a99e8b1db336a0b6, type: 2}
+    onExitAnimation: {fileID: 0}
+    hangTimeEnabled: 0
+    hangTime: 0.2
+  walkStateData:
+    actionName: Walk
+    baseActionDuration: -1
+    resourceData:
+      baseStaminaCost: 0
+      baseMagicCost: 0
+      baseHealthCost: 0
+    onEnterAnimation: {fileID: 7400000, guid: 3721bafcaa0aaea40a3fa06277b0ab7e, type: 2}
+    onExitAnimation: {fileID: 0}
+    hangTimeEnabled: 0
+    hangTime: 0.2
+    accelerationData:
+      baseAcceleration: 1
+      minAcceleration: 1
+      maxAcceleration: 1
+    decelarationData:
+      baseDecelaration: 5
+      minDecelaration: 1
+      maxDecelaration: 10
+    velocityData:
+      minVelocity: -5
+      maxVelocity: 5
+  jumpStateData:
+    actionName: Jump
+    baseActionDuration: 3
+    resourceData:
+      baseStaminaCost: 10
+      baseMagicCost: 0
+      baseHealthCost: 0
+    onEnterAnimation: {fileID: 7400000, guid: afe6556afc3b3d547be89f09ea2bb496, type: 2}
+    onExitAnimation: {fileID: 0}
+    hangTimeEnabled: 0
+    hangTime: 0.2
+    baseJumpForce: 2.58
+    minJumpForce: 1
+    maxJumpForce: 1
+  fallStateData:
+    actionName: Fall
+    baseActionDuration: -1
+    resourceData:
+      baseStaminaCost: 10
+      baseMagicCost: 0
+      baseHealthCost: 0
+    onEnterAnimation: {fileID: 7400000, guid: d4610e9256d5d3c439e386f6726814f8, type: 2}
+    onExitAnimation: {fileID: 0}
+    baseStateData:
+      actionName: 
+      baseActionDuration: 1
+      resourceData:
+        baseStaminaCost: 10
+        baseMagicCost: 0
+        baseHealthCost: 0
+      onEnterAnimation: {fileID: 0}
+      onExitAnimation: {fileID: 0}
+  overHeadSwingData:
+    actionName: Over Head Swing
+    baseActionDuration: 2
+    resourceData:
+      baseStaminaCost: 10
+      baseMagicCost: 0
+      baseHealthCost: 0
+    onEnterAnimation: {fileID: 7400000, guid: d68f70d2a4fd0ef4f8aeb907c3e9acce, type: 2}
+    onExitAnimation: {fileID: 0}
+    damageData:
+      baseDamage: 1
+      minDamage: 1
+      maxDamage: 1
+    rangeData:
+      baseRange: 1
+      minRange: 1
+      maxRange: 1
+    meleeAttackData:
+      damageRatio: 1
+      rangeRatio: 1
+    baseSwingForce: 1
+    minSwingForce: 1
+    maxSwingForce: 1
+  stabData:
+    actionName: Stab
+    baseActionDuration: 1
+    resourceData:
+      baseStaminaCost: 10
+      baseMagicCost: 0
+      baseHealthCost: 0
+    onEnterAnimation: {fileID: 7400000, guid: 7c5cb3efec8e326478c8bcac6cbdca62, type: 2}
+    onExitAnimation: {fileID: 0}
+    damageData:
+      baseDamage: 1
+      minDamage: 1
+      maxDamage: 1
+    rangeData:
+      baseRange: 1
+      minRange: 1
+      maxRange: 1
+    meleeAttackData:
+      damageRatio: 1
+      rangeRatio: 1
