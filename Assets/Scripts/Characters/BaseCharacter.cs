@@ -83,14 +83,18 @@ namespace Assets.Characters
             this.facingRight = _facingRight;
         }
 
+        protected virtual void Awake()
+        {
+        }
         public virtual void FixedUpdate()
         {
-            grounded = IsGrounded(); 
+            grounded = IsGrounded();
+            RegenerateStats();
+
         }
 
         public virtual void Update()
         {
-            RegenerateStats();
         }
 
         public virtual void RegenerateStats()

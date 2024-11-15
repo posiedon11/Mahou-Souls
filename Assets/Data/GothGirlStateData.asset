@@ -12,6 +12,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b31fc166312960d4eaba0fcf3c026a43, type: 3}
   m_Name: GothGirlStateData
   m_EditorClassIdentifier: 
+  emptyStateData:
+    actionName: EmptyState
+    baseActionDuration: 0
+    resourceData:
+      baseStaminaCost: 0
+      baseMagicCost: 0
+      baseHealthCost: 0
+    onEnterAnimation: {fileID: 0}
+    onExitAnimation: {fileID: 0}
   idleStateData:
     actionName: Idle
     baseActionDuration: -1
@@ -56,7 +65,7 @@ MonoBehaviour:
     onExitAnimation: {fileID: 0}
     hangTimeEnabled: 0
     hangTime: 0.2
-    baseJumpForce: 18.9
+    baseJumpForce: 10
     minJumpForce: 1
     maxJumpForce: 1
   fallStateData:
@@ -101,7 +110,7 @@ MonoBehaviour:
       onExitAnimation: {fileID: 0}
   overHeadSwingData:
     actionName: OverHeadSwing
-    baseActionDuration: 1
+    baseActionDuration: 2
     resourceData:
       baseStaminaCost: 10
       baseMagicCost: 0

@@ -30,6 +30,7 @@ namespace Assets.Scripts.Characters.States
 
 
         public bool canInterrupt = true, inProgress = true;
+        protected float elapsedTime = 0, duration = 1;
 
         public virtual void OnEnter()
         {
@@ -44,11 +45,19 @@ namespace Assets.Scripts.Characters.States
             }
             ReduceResources();
             RecalculateStats();
+            elapsedTime = 0f;
+            inProgress = true;
         }
         public virtual void OnExit()
         {
             if (DebugSettings.stateMachineBehavior)
                 Debug.Log($"Exiting {actionName}");
+        }
+        public virtual void FixedUpdate()
+        {
+            if (DebugSettings.stateMachineBehavior)
+                Debug.Log($"Fixed updating {actionName}");
+            ElapseTime();
         }
         public virtual void Update()
         {
@@ -62,13 +71,14 @@ namespace Assets.Scripts.Characters.States
         }
         public virtual bool CanExit()
         {
-            bool canExit=true;
+            bool canExit = true;
             string outputMessage = "";
-            if(!inProgress)
+
+            if (!inProgress)
             {
                 outputMessage += $"{actionName} is not in progress\n";
             }
-            else if(canInterrupt)
+            else if (canInterrupt)
             {
                 outputMessage += $"{actionName} is in progress and can be interrupted\n";
             }
@@ -77,7 +87,6 @@ namespace Assets.Scripts.Characters.States
                 outputMessage += $"{actionName} is in progress and cannot be interrupted\n";
                 canExit = false;
             }
-           
 
             if(DebugSettings.stateMachineTransations)
                 Debug.Log(outputMessage);
@@ -120,10 +129,19 @@ namespace Assets.Scripts.Characters.States
             character.currentMana = Math.Clamp(character.currentMana - magicCost,0,character.maxMana);
             character.currentHealth = Math.Clamp(character.currentHealth - healthCost,0,character.maxHealth);
         }
-
+        private void ElapseTime()
+        {
+            elapsedTime += Time.fixedDeltaTime;
+            if (elapsedTime >= duration || duration <=0)
+            {
+               // Debug.Log($"{actionName} duration reached");
+                inProgress = false;
+                //OnExit();
+            }
+        }
         public virtual void OnHitboxTrigger(Collider2D collision, string hitboxName)
         {
-            Debug.Log($"{actionName} hitbox:   {hitboxName} hit:   {collision.name}");
+            Debug.Log($"{actionName} hitbox __{hitboxName}__ hit:   {collision.name}");
         }
         public virtual IEnumerable<Hitbox>? FindHitboxes(string objectPath)
         {
@@ -138,7 +156,6 @@ namespace Assets.Scripts.Characters.States
         protected TStateData stateData;
         private BaseStateData baseStateData;
 
-        protected float elapsedTime = 0, duration = 1;
 
 
         #region old
@@ -180,22 +197,22 @@ namespace Assets.Scripts.Characters.States
             base.OnEnter();
             if (stateData.onEnterAnimation != null)
                 animator.Play(stateData.onEnterAnimation.name);
-            elapsedTime = 0f;
-            inProgress = true;
+
         }
         public override void Update()
         {
             base.Update();
-            elapsedTime += Time.fixedDeltaTime;
-            //negative duration means the action will not exit until the player does\
-
-            if (elapsedTime >= duration && duration != -1)
-            {
-                Debug.Log($"{actionName} duration reached");
-                inProgress = false;
-                //OnExit();
-            }
         }
+        public override void FixedUpdate()
+        {
+            base.FixedUpdate();
+            //elapseTime()
+                //negative duration means the action will not exit until the player does\
+
+            
+        }
+
+        
 
         public override void OnExit()
         {

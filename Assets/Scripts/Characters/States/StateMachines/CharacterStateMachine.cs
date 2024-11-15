@@ -51,7 +51,14 @@ namespace Assets.Scripts.Characters.States.StateMachines
         {
            foreach(StateMachine state in stateMachines)
             {
-                state.Update();
+               state.Update();
+            }
+        }
+        public virtual void FixedUpdate()
+        {
+            foreach (StateMachine state in stateMachines)
+            {
+                state.FixedUpdate();
             }
         }
     }

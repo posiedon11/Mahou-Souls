@@ -24,10 +24,11 @@ public class Hitbox : MonoBehaviour
     }
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        Debug.Log($"{base.name} hit {collision.gameObject.name}");
+        //Debug.Log($"{base.name} hit {collision.gameObject.name}");
+
         if (collision.gameObject.layer == targetLayer)
             action.OnHitboxTrigger(collision, base.name);
-        else
-            Debug.Log($"Hitbox hit {collision.gameObject.layer} layer, while aiming for {targetLayer}");
+        //else
+            //Debug.Log($"Hitbox hit {collision.gameObject.layer} layer, while aiming for {targetLayer}");
     }
 }

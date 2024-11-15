@@ -8,7 +8,10 @@ namespace Assets.Characters.Player
 {
     public class PlayerCharacter : BaseCharacter
     {
-
+        protected override void Awake()
+        {
+           // DontDestroyOnLoad(gameObject);
+        }
         protected override void Start()
         {
             base.Start();
@@ -17,5 +20,6 @@ namespace Assets.Characters.Player
         {
             base.Update();
         }
+        
     }
 }

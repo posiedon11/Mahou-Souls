@@ -17,10 +17,10 @@ namespace Assets.Scripts.Characters.Enemies.StateMachines
     {
         protected CharacterStateData stateData;
 
-        public IdleState? idleState = null;
-        public WalkState? walkState = null;
-        public JumpState? jumpState = null;
-        public FallState? fallState = null;
+        public IdleState idleState;
+        public WalkState walkState;
+        public JumpState jumpState;
+        public FallState fallState;
         public MovementStateMachine(GothGirlStateMachine _stateMachine, CharacterStateData _stateData) : base(_stateMachine)
         {
             stateData = _stateData;
@@ -76,9 +76,9 @@ namespace Assets.Scripts.Characters.Enemies.StateMachines
     {
         protected CharacterStateData stateData;
 
-        public OverheadSwingState? overheadSwingState;
+        public OverheadSwingState overheadSwingState;
 
-        public EmptyState? emptyState = null;
+        public EmptyState emptyState;
         public ActionStateMachine(GothGirlStateMachine _stateMachine, CharacterStateData _stateData) : base(_stateMachine)
         {
             stateData = _stateData;
@@ -92,6 +92,7 @@ namespace Assets.Scripts.Characters.Enemies.StateMachines
             try
             {
                 overheadSwingState = new OverheadSwingState(parentMachine, stateData.overHeadSwingData);
+                emptyState = new EmptyState(parentMachine, stateData.emptyStateData);
                 //overheadSwingState.Initialize();
             }
             catch (Exception e)

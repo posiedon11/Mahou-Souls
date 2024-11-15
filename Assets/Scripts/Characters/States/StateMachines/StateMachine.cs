@@ -12,7 +12,7 @@ namespace Assets.Scripts.Characters.States.StateMachines
 {
     public abstract class StateMachine
     {
-        protected BaseState? currentState;
+        public BaseState? currentState;
         protected CharacterStateMachine parentMachine;
 
         public StateMachine(CharacterStateMachine _stateMachine)
@@ -44,7 +44,7 @@ namespace Assets.Scripts.Characters.States.StateMachines
             else
             {
                 if (newState != null)
-                Debug.Log($"Invalid state for { newState.actionName}");
+                    Debug.Log($"Invalid state for {newState.actionName}");
                 else
                     Debug.Log("Invalid state, null");
             }
@@ -78,10 +78,18 @@ namespace Assets.Scripts.Characters.States.StateMachines
             if (currentState != null)
                 currentState?.Update();
         }
+        public virtual void FixedUpdate()
+        {
+            if (currentState != null)
+                currentState?.FixedUpdate();
+        }
         public abstract void InitializeStates();
         public abstract void SetDefaultState();
 
-        public virtual void SetNextState() { }
+        public virtual void SetNextState()
+        {
+
+        }
 
         public abstract bool ValidState(BaseState? stateData);
     }

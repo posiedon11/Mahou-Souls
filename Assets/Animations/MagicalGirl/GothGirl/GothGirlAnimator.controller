@@ -85,6 +85,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   audioClip: {fileID: 8300000, guid: 6e4bb7f06bba9d546973c48aa061c65d, type: 3}
   audioSource: {fileID: 0}
+  audioMixerGroup: {fileID: -1135046196999950798, guid: 84c316f9f5a26df4e851beb6c4e46a40, type: 2}
 --- !u!114 &-3164508627395938633
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -99,6 +100,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   audioClip: {fileID: 8300000, guid: 7b2207e3d2fc27c4ebe4b12d1ede95a1, type: 3}
   audioSource: {fileID: 0}
+  audioMixerGroup: {fileID: -1135046196999950798, guid: 84c316f9f5a26df4e851beb6c4e46a40, type: 2}
 --- !u!1101 &-1374156158212019232
 AnimatorStateTransition:
   m_ObjectHideFlags: 1
@@ -462,8 +464,8 @@ AnimatorState:
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions:
-  - {fileID: 390810157967734274}
   - {fileID: -1002782865085708441}
+  - {fileID: 390810157967734274}
   m_StateMachineBehaviours: []
   m_Position: {x: 50, y: 50, z: 0}
   m_IKOnFeet: 0

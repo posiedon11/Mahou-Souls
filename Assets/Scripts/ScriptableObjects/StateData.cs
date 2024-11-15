@@ -68,6 +68,10 @@ namespace Assets.Scripts.ScriptableObjects
         public AnimationClip? onExitAnimation;
     }
     #region MovementData
+    [System.Serializable]
+    public class EmptyStateData : BaseStateData
+    {
+    }
 
     [System.Serializable]
     public class GroundedStateData : BaseStateData

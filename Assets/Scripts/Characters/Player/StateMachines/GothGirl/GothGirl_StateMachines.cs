@@ -19,11 +19,11 @@ namespace Assets.Scripts.Characters.GothGirl
         public BaseCharacter character;
 
 
-        public IdleState? idleState = null;
-        public WalkState? walkState = null;
-        public JumpState? jumpState = null;
-        public FallState? fallState = null;
-        public LandingState? landingState = null;
+        public IdleState idleState;
+        public WalkState walkState;
+        public JumpState jumpState;
+        public FallState fallState;
+        public LandingState landingState;
 
 
         public bool isSprinting = false;
@@ -108,6 +108,60 @@ namespace Assets.Scripts.Characters.GothGirl
                         SetState(walkState);
                     break;
                 case null:
+                    SetState(idleState);
+                    break;
+            }
+        }
+
+        public override void FixedUpdate()
+        {
+            base.FixedUpdate();
+            //Debug.Log(character.moveDireciton);
+            if (character.moveDireciton == Vector2.zero && character.rb.velocity.x == 0)
+            {
+                // Debug.Log("Not moving");
+                isWalking = false;
+            }
+            else
+                isWalking = true;
+
+            if (!character.grounded && currentState != fallState)
+            {
+                SetState(fallState);
+            }
+            switch (currentState)
+            {
+                case WalkState:
+                    if (!isWalking)
+                        SetState(idleState);
+                    break;
+
+
+                case JumpState:
+                    SetState(fallState);
+                    break;
+
+
+                case FallState:
+                    if (parentMachine.character.grounded)
+                        SetState(landingState);
+                    break;
+
+
+                case LandingState _:
+                    if (isWalking)
+                        SetState(walkState);
+                    else
+                        SetState(idleState);
+                    break;
+
+
+                case IdleState:
+                    if (isWalking)
+                        SetState(walkState);
+                    break;
+                case null:
+                    SetState(idleState);
                     break;
             }
         }
@@ -143,9 +197,10 @@ namespace Assets.Scripts.Characters.GothGirl
     {
         protected CharacterStateData stateData;
 
-        public OverheadSwingState? overheadSwingState;
+        public OverheadSwingState overheadSwingState;
 
-        public EmptyState? emptyState = null;
+        public EmptyState emptyState;
+        public bool startSwing = false;
         public ActionStateMachine(GothGirlStateMachine _stateMachine, CharacterStateData _stateData) : base(_stateMachine)
         {
             stateData = _stateData;
@@ -159,6 +214,7 @@ namespace Assets.Scripts.Characters.GothGirl
             try
             {
                 overheadSwingState = new OverheadSwingState(parentMachine, stateData.overHeadSwingData);
+                emptyState = new EmptyState(parentMachine, stateData.emptyStateData);
                 //overheadSwingState.Initialize();
             }
             catch (Exception e)
@@ -174,9 +230,17 @@ namespace Assets.Scripts.Characters.GothGirl
                 case OverheadSwingState:
                     if (currentState.CanExit())
                     {
-                        SetState1(emptyState);
+                        SetState(emptyState);
                         //currentState?.OnExit();
                         //currentState = null;
+                    }
+                    break;
+                case EmptyState:
+                    if (startSwing)
+                    {
+                        startSwing = false;
+
+                        SetState(overheadSwingState);
                     }
                     break;
                 case null:
@@ -193,6 +257,9 @@ namespace Assets.Scripts.Characters.GothGirl
             {
                 case OverheadSwingState:
                     return true;
+                case EmptyState:
+                    return true;
+
                 case null:
                     return true;
                 default:

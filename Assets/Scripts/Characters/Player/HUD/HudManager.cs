@@ -80,24 +80,23 @@ namespace Assets.Scripts.Characters.Player
         }
 
         //Update the values of the bars
-        public void Update()
+        public void FixedUpdate()
         {
             if (healthBar.validBar())
             {
                 healthBar.SetFill(player.healthPercent);
                 healthBar.SetText(player.currentHealth, player.maxHealth);
             }
-            if(staminaBar.validBar())
+            if (staminaBar.validBar())
             {
                 staminaBar.SetFill(player.staminaPercent);
                 staminaBar.SetText(player.currentStamina, player.maxStamina);
             }
-            if(magicBar.validBar())
+            if (magicBar.validBar())
             {
                 magicBar.SetFill(player.manaPercent);
                 magicBar.SetText(player.currentMana, player.maxMana);
             }
-
         }
     }
 }

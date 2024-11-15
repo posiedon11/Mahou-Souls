@@ -19,6 +19,8 @@ public abstract class BaseEnemy : BaseCharacter
     {
         base.Start();
         faction = CharacterFaction.Enemy;
+        healthBar = new StatusBar(healthBarObject);
+
     }
 
     // Update is called once per frame
@@ -26,11 +28,15 @@ public abstract class BaseEnemy : BaseCharacter
     public override void Update()
     {
         base.Update();
-        healthBar = new StatusBar(healthBarObject);
+        
+        
+    }
+    public override void FixedUpdate()
+    {
+        base.FixedUpdate();
 
         healthBar.SetFill(currentHealth / maxHealth);
         healthBar.SetText("");
-        
     }
 
     //Enemy will die when health reaches 0, and destroy the game object

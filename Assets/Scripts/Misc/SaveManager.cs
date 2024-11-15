@@ -7,6 +7,8 @@ using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using Assets.Scripts.Tools;
+using UnityEditor;
 
 namespace Assets.Scripts.Misc
 {
@@ -14,41 +16,47 @@ namespace Assets.Scripts.Misc
     public class PlayerData
     {
         public string lastScene = "";
-        public float playerHealth = 100;
+        public float maxHealth, maxStamina;
+        public float currentHealth, currentStamina;
 
     }
-    public class SaveManager : MonoBehaviour
+    [Serializable]
+    public class SaveData
     {
-        public static SaveManager instance;
+        public PlayerData playerData;
+    }
+    public class SaveManager
+    {
 
         public PlayerData playerData;
+        public SaveData saveData;
 
         public PlayerCharacter playerCharacter;
 
         private string saveFilePath;
 
-        private void Awake()
+       public SaveManager()
         {
-            saveFilePath = Application.persistentDataPath + "/playerSaveData.json";
-            if (instance == null)
-            {
-                instance = this;
-                DontDestroyOnLoad(gameObject);
-            }
-            else
-            {
-                Destroy(gameObject);
-            }
+
+            saveFilePath = $"{Application.persistentDataPath}/saveData.json";
+            saveData = new SaveData();
+            saveData.playerData = new PlayerData();
+
         }
 
         public void SaveGame()
         {
-            SavePlayerData();
+             SavePlayerData();
+
+            string jsonData = JsonUtility.ToJson(saveData, true);
+            File.WriteAllText(saveFilePath, jsonData);
+
         }
 
-        public void LoadSave()
+        public SaveData LoadSave()
         {
-            LoadPlayerData();
+           return LoadPlayerData();
+
         }
         private void SavePlayerData()
         {
@@ -57,33 +65,48 @@ namespace Assets.Scripts.Misc
             {
                 playerData = new PlayerData();
             }
-            GameObject playerObject = GameObject.FindWithTag("Player");
-            if (playerObject != null)
+            if (playerCharacter != null)
             {
-                playerCharacter = playerObject.GetComponent<PlayerCharacter>();
+                //playerCharacter = playerObject.GetComponent<PlayerCharacter>();
+                //playerCharacter = PlayerCharacter.instance;
                 playerData.lastScene = SceneManager.GetActiveScene().name;
-                playerData.playerHealth = playerCharacter.currentHealth;
-                string jsonData = JsonUtility.ToJson(playerData, true);
-                File.WriteAllText(saveFilePath, jsonData);
+                Tools.Tools.CopyFields(playerCharacter, playerData);
+                saveData.playerData = playerData;
             }        
         }
-        private void LoadPlayerData()
+        private SaveData LoadPlayerData()
         {
             Debug.Log("loading player data");
             if (File.Exists(saveFilePath))
             {
-                GameObject playerObject = GameObject.Find("GothGirlPlayer");
+                string jsonData = File.ReadAllText(saveFilePath);
+                var saveData =   JsonUtility.FromJson<SaveData>(jsonData);
+                return saveData;
+                GameObject playerObject = GameObject.FindWithTag("Player");
                 if (playerObject != null)
                 {
-                    //playerCharacter = playerObject.GetComponent<PlayerCharacter>();
-                    //string jsonData = File.ReadAllText(saveFilePath);
-                    //playerData = JsonUtility.FromJson<PlayerData>(jsonData);
-                    //playerCharacter.currentHealth = playerData.playerHealth;
+                   // playerCharacter = PlayerCharacter.instance;
 
+                    //playerCharacter = playerObject.GetComponent<PlayerCharacter>();
+                    Debug.Log("Player data loaded.");
                 }
+                SceneManager.LoadSceneAsync(playerData.lastScene).completed += OnSceneLoaded;
+
+            }
+            return null;
+        }
+        private void OnSceneLoaded(AsyncOperation operation)
+        {
+            GameObject playerObject = GameObject.FindWithTag("Player");
+            if (playerObject != null)
+            {
+                //playerCharacter = playerObject.GetComponent<PlayerCharacter>();
+                Tools.Tools.CopyFields(playerData, playerCharacter);  // Copy values from PlayerData to PlayerCharacter
+
+                // Restore other fields as needed
+                Debug.Log("Player data restored after scene load.");
             }
         }
-
         public bool HasSaveFile()
         {
             return System.IO.File.Exists(saveFilePath);
@@ -97,6 +120,9 @@ namespace Assets.Scripts.Misc
             }
             playerData = new PlayerData();
         }
+
+        
+
     }
 
 }

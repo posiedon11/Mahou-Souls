@@ -93,7 +93,8 @@ public class PlayerControls : MonoBehaviour
     {
         if(ctx.performed)
         {
-            stateMachine.actionStateMachine.SetState(stateMachine.actionStateMachine.overheadSwingState);
+            stateMachine.actionStateMachine.startSwing = true;
+            //stateMachine.actionStateMachine.SetState(stateMachine.actionStateMachine.overheadSwingState);
 
         }
     }

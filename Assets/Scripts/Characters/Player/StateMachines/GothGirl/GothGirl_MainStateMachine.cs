@@ -38,10 +38,7 @@ namespace Assets.Scripts.Characters.GothGirl
             //InitializeStates();
         }
 
-        public override void SetState(BaseState newState)
-        {
-            base.SetState(newState);
-        }
+       
 
         protected override void InitializeStates()
         {
@@ -69,6 +66,10 @@ namespace Assets.Scripts.Characters.GothGirl
                // movementStateMachine?.Update();
                 //actionStateMachine?.Update();
                 //currentState?.Update();
+        }
+        public override void FixedUpdate()
+        {
+            base.FixedUpdate();
         }
     }
 }

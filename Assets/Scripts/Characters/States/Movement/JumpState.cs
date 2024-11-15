@@ -24,13 +24,13 @@ namespace Assets.Scripts.Characters.States.Movement
                 return;
             }
             base.OnEnter();
-           // animator.Play("MagicalGirl_Jump");
+            // animator.Play("MagicalGirl_Jump");
             rb.AddForce(Vector2.up * jumpStateData.baseJumpForce, ForceMode2D.Impulse);
         }
 
         public override bool CanPreform()
         {
-            return character.IsGrounded();
+            return base.CanPreform();
         }
     }
 }

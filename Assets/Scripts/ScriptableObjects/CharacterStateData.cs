@@ -10,6 +10,7 @@ namespace Assets.Scripts.ScriptableObjects
     [CreateAssetMenu(fileName = "CharacterStateData", menuName = "Character/StateData", order = 2)]
     public class CharacterStateData : ScriptableObject
     {
+        public EmptyStateData emptyStateData;
         public IdleStateData idleStateData;
         public WalkStateData walkStateData;
         public JumpStateData jumpStateData;

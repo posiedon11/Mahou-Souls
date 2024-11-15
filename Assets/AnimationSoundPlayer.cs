@@ -1,18 +1,23 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Audio;
 
 public class AnimationSoundPlayer : StateMachineBehaviour
 {
     public AudioClip audioClip;
     public AudioSource audioSource;
+    public AudioMixerGroup audioMixerGroup;
    // OnStateEnter is called when a transition starts and the state machine starts to evaluate this state
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        Debug.Log("Walking Audio Starting");
         audioSource = animator.GetComponent<AudioSource>();
         if(audioSource !=null && audioClip != null)
         {
+            if(audioMixerGroup != null)
+            {
+                audioSource.outputAudioMixerGroup = audioMixerGroup;
+            }
             audioSource.PlayOneShot(audioClip);
         }
     }

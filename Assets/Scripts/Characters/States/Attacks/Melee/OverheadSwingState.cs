@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using UnityEditor.ShaderGraph.Internal;
 using UnityEngine;
 
 namespace Assets.Scripts.Characters.States.Attacks.Melee
@@ -30,7 +29,8 @@ namespace Assets.Scripts.Characters.States.Attacks.Melee
         public OverheadSwingState(CharacterStateMachine _stateMachine, OverHeadSwingData _stateData) : base(_stateMachine, _stateData)
         {
             try
-            {                
+            {
+                canInterrupt = false;
                 attacker = character;
                 hitboxes = FindHitboxes("Attacks/OverheadSwing/HurtBoxes");
                 swingData = _stateData;
@@ -38,7 +38,7 @@ namespace Assets.Scripts.Characters.States.Attacks.Melee
                 damageRatio = swingData.meleeAttackData.damageRatio;
                 rangeRatio = swingData.meleeAttackData.rangeRatio;
 
-                Debug.Log(hitboxes.Count());
+                attackDamage = swingData.damageData.baseDamage;
                 foreach (Hitbox hitbox in hitboxes)
                 {
                     hitbox.Initialize(this, "Characters");
@@ -53,21 +53,36 @@ namespace Assets.Scripts.Characters.States.Attacks.Melee
         //Sets the attacker of the swing and gets the hitboxes
         public override void OnEnter()
         {
+            Debug.Log($"Clearing hit enemies Before OnEnter {hitEnemies.Count()}, {knockbackEnemies.Count()}");
+
             base.OnEnter();
             ReduceResources();
+            knockbackEnemies.Clear();
+            hitEnemies.Clear();
+
+            hitEnemies = new List<BaseCharacter>();
+            knockbackEnemies = new List<BaseCharacter>();
+
             damageRatio = swingData.meleeAttackData.damageRatio;
             rangeRatio = swingData.meleeAttackData.rangeRatio;
             attackDamage = swingData.damageData.baseDamage;
+            Debug.Log($"Clearing hit enemies After OnEnter {hitEnemies.Count()}, {knockbackEnemies.Count()}");
+
             //animator.SetTrigger("MagicalGirl_OverHead_Swing");
             //animator.Play("MagicalGirl_OverHead_Swing");
         }
 
         public override void OnExit()
         {
+           Debug.Log($"Clearing hit enemies Before OnExit {hitEnemies.Count()}, {knockbackEnemies.Count()}");
+
             base.OnExit();
             hitEnemies.Clear();
             knockbackEnemies.Clear();
+
+
             stateMachine.SetDefaultState();
+            Debug.Log($"Clearing hit enemies After OnExit {hitEnemies.Count()}, {knockbackEnemies.Count()}");
             //stateMachine.actionStateMachine.SetDefaultState();
         }
         //inherited function from IMeleeAttack
@@ -83,28 +98,13 @@ namespace Assets.Scripts.Characters.States.Attacks.Melee
         {
             PerformMeleeAttack();
         }
-        //Deactivates the hitbox after a time
-        //not used anymore
-        private void OnTriggerEnter2D(Collider2D collision)
-        {
-            Debug.Log($"Sword hit {collision.gameObject.name}");
-            BaseCharacter character = collision.GetComponent<BaseCharacter>();
-            if (character != null && !hitEnemies.Contains(character))
-            {
-                if (character.faction == CharacterFaction.Enemy)
-                {
-                    hitEnemies.Add(character);
-                    ApplyDamage(character);
-                }
-            }
-            //Debug.Log("Sword hit something");
-        }
-
         //applies damage to the victim, possible to add something to attacker as well
         private void ApplyDamage(BaseCharacter victim)
         {
-            Debug.Log($"Applying damage to {victim.name} from {actionName}");
-            DamageInstance damageInstance = new DamageInstance(attacker, victim, (attacker.attackDamage + attackDamage) * damageRatio, DamageType.Physical, null);
+            float damageAmount =Mathf.Clamp( (attacker.attackDamage + attackDamage) * damageRatio, 0, float.MaxValue);
+            Debug.Log($"Character Damage: {attacker.attackDamage}, ActionDamage{swingData.damageData.baseDamage}, DamageRatio: {damageRatio}, RangeRatio: {rangeRatio}");
+            Debug.Log($"Applying damage ({damageAmount}) to {victim.name} from {actionName}");
+            DamageInstance damageInstance = new DamageInstance(attacker, victim, damageAmount, DamageType.Physical, null);
             damageInstance.printDamageInstance();
             victim.TakeDamage(damageInstance);
         }
@@ -117,17 +117,34 @@ namespace Assets.Scripts.Characters.States.Attacks.Melee
             {
                 if (attacker.faction != victim.faction)
                 {
-                    Debug.Log("Hitbox triggered");
-                    if (hitboxName == "KnockBack" && !knockbackEnemies.Contains(victim))
+                    Debug.Log("Hitbox triggered For faction");
+                    if (hitboxName == "KnockBack")
                     {
-                        Debug.Log("Knockback applied");
-                        victim.ApplyKnockback(attacker.transform.position, swingData.baseSwingForce);
-                        knockbackEnemies.Add(victim);
+                        if (knockbackEnemies.Contains(victim))
+                            Debug.Log("Enemy already knockebacked");
+                        else
+                        {
+                            Debug.Log("Knockback applied");
+                            victim.ApplyKnockback(attacker.transform.position, swingData.baseSwingForce);
+                            knockbackEnemies.Add(victim);
+                        }
                     }
-                    else if (hitboxName == "Swing" && !hitEnemies.Contains(victim))
+                    else if (hitboxName == "Swing")
                     {
-                        hitEnemies.Add(victim);
-                        ApplyDamage(victim);
+                        if(hitEnemies.Contains(victim))
+                        {
+                            Debug.Log("Enemy already hit");
+                        }
+                        else
+                        {
+                            hitEnemies.Add(victim);
+                            Debug.Log($"Hitenemies count after applied damage: {hitEnemies.Count()}");
+                            ApplyDamage(victim);
+                        }
+                    }
+                    else
+                    {
+                        Debug.Log("Not correct hitbox name");
                     }
                 }
             }

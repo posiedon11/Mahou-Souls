@@ -1,5 +1,6 @@
 //Mainmenu.cs
 //the games main menu
+using Assets.Scripts;
 using Assets.Scripts.Misc;
 using System.Collections;
 using System.Collections.Generic;
@@ -9,25 +10,16 @@ using UnityEngine.SceneManagement;
 
 public class MainMenu : MonoBehaviour
 {
-    public SceneLoadManager sceneLoadManager;
 
-    public void Awake()
-    {
-        sceneLoadManager = SceneLoadManager.instance;
-    }
     public void StartGame()
     {
         UnityEngine.Debug.Log("Game is starting");
-        SceneManager.LoadScene("Game");
+        GameManager.instance.ResetGame();
+        LoadScene("IntroScene");
     }
-    public void ContineuGame(string sceneName="")
+    public void ContineuGame()
     {
-        if(SceneLoadManager.instance.LoadScene())
-        {
-            if (SaveManager.instance.HasSaveFile())
-                sceneLoadManager.LoadScene();
-            else LoadScene(sceneName);
-        }
+        GameManager.instance.LoadGame();
     }
     public void LoadScene(string sceneName = "")
     {

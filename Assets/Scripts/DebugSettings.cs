@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Assets.Scripts
 {
-    public static class DebugSettings
+    public static class DebugSettings 
     {
         public static bool stateMachineActions = false;
         public static bool stateMachineTransations = false;
